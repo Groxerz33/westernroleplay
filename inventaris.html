@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inventaris - Western RP</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e1e;
+      color: #fff;
+    }
+
+    header {
+      background-color: #2c2c2c;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 4px solid #f2c94c;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #f2c94c;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background-color: #2c2c2c;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
+
+    .item-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .item {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #444;
+      text-align: center;
+    }
+
+    .item h3 {
+      color: #f2c94c;
+      margin-bottom: 10px;
+    }
+
+    .item p {
+      margin: 5px 0;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      color: #f2c94c;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #1a1a1a;
+      border-top: 1px solid #333;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Inventaris Pemain</h1>
+  </header>
+
+  <div class="container">
+    <div class="item-list">
+      <div class="item">
+        <h3>Mobil Sultan</h3>
+        <p>Kategori: Kendaraan</p>
+        <p>Status: Aktif</p>
+      </div>
+      <div class="item">
+        <h3>Pakaian Cowboy</h3>
+        <p>Kategori: Pakaian</p>
+        <p>Status: Tersimpan</p>
+      </div>
+      <div class="item">
+        <h3>Senjata Colt</h3>
+        <p>Kategori: Senjata</p>
+        <p>Status: Aktif</p>
+      </div>
+    </div>
+
+    <a href="dashboard.html" class="back-link">← Kembali ke Dashboard</a>
+  </div>
+
+  <footer>
+    &copy; 2025 Western Roleplay
+  </footer>
+</body>
+</html>

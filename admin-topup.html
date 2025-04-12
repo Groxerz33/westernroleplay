@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Top Up - Western RP</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e1e;
+      color: #fff;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #f2c94c;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #444;
+      text-align: center;
+    }
+
+    th {
+      background-color: #333;
+      color: #f2c94c;
+    }
+
+    tr:nth-child(even) {
+      background-color: #2c2c2c;
+    }
+
+    button {
+      padding: 6px 12px;
+      margin: 0 4px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .confirm {
+      background-color: #27ae60;
+      color: #fff;
+    }
+
+    .reject {
+      background-color: #c0392b;
+      color: #fff;
+    }
+
+    #message {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel - Konfirmasi Top Up</h1>
+  <table id="topupTable">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Jumlah</th>
+        <th>Metode</th>
+        <th>Status</th>
+        <th>Waktu</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <p id="message"></p>
+
+  <script>
+    async function loadRequests() {
+      const res = await fetch("https://69f3-101-128-105-191.ngrok-free.app/api/topup-pending");
+      const data = await res.json();
+      const tbody = document.querySelector("#topupTable tbody");
+      tbody.innerHTML = "";
+
+      data.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.Username}</td>
+          <td>${row.Amount} WP Coin</td>
+          <td>${row.Method}</td>
+          <td>${row.Status}</td>
+          <td>${new Date(row.RequestTime).toLocaleString()}</td>
+          <td>
+            <button class="confirm" onclick="confirmTopup(${row.ID}, '${row.Username}', ${row.Amount})">Konfirmasi</button>
+            <button class="reject" onclick="rejectTopup(${row.ID})">Tolak</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function confirmTopup(id, username, amount) {
+      const res = await fetch("https://69f3-101-128-105-191.ngrok-free.app/api/topup-konfirmasi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, username, amount })
+      });
+      const result = await res.json();
+      alert(result.message);
+      loadRequests();
+    }
+
+    async function rejectTopup(id) {
+      const res = await fetch("https://69f3-101-128-105-191.ngrok-free.app/api/topup-tolak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
+      });
+      const result = await res.json();
+      alert(result.message);
+      loadRequests();
+    }
+
+    loadRequests();
+  </script>
+</body>
+</html>

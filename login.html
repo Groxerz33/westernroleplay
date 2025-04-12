@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Western Roleplay</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e1e;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .form-section {
+      background-color: #2c2c2c;
+      padding: 30px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    .form-section h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #f2c94c;
+    }
+    form input, form button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+      font-size: 14px;
+    }
+    form input {
+      background-color: #3a3a3a;
+      color: #fff;
+    }
+    form button {
+      background-color: #f2c94c;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    form button:hover {
+      background-color: #e1b93a;
+    }
+    #message {
+      text-align: center;
+      margin-top: 10px;
+    }
+    a {
+      display: block;
+      text-align: center;
+      color: #f2c94c;
+      margin-top: 15px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-section">
+    <h2>Login ke Western RP</h2>
+    <form id="loginForm">
+      <input type="text" id="nickname" placeholder="NamaUcp" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <p id="message"></p>
+    </form>
+    <a href="index.html">Kembali ke Beranda</a>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const nickname = document.getElementById("nickname").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const message = document.getElementById("message");
+
+      if (!nickname || !password) {
+        message.textContent = "Isi semua kolom.";
+        message.style.color = "#f66";
+        return;
+      }
+
+      try {
+        const res = await fetch("https://69f3-101-128-105-191.ngrok-free.app/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nickname, password })
+        });
+
+        const result = await res.json();
+        message.textContent = result.message;
+        message.style.color = result.success ? "lightgreen" : "#f66";
+
+        if (result.success) {
+          // Simpan username di session agar dashboard & lainnya tahu siapa yang login
+          sessionStorage.setItem("username", nickname);
+          setTimeout(() => window.location.href = "dashboard.html", 1500);
+        }
+      } catch (err) {
+        message.textContent = "Gagal menghubungi server.";
+        message.style.color = "#f66";
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

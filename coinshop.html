@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coin Shop - Western RP</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e1e;
+      color: #fff;
+    }
+
+    header {
+      background-color: #2c2c2c;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 4px solid #f2c94c;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #f2c94c;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .item {
+      background-color: #2c2c2c;
+      padding: 20px;
+      border-radius: 12px;
+      width: 220px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .item h3 {
+      margin-top: 0;
+      color: #f2c94c;
+    }
+
+    .item p {
+      margin: 10px 0;
+    }
+
+    .item button {
+      background-color: #f2c94c;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .item button:hover {
+      background-color: #e1b93a;
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    a.back {
+      display: inline-block;
+      margin-top: 40px;
+      text-decoration: none;
+      color: #f2c94c;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #1a1a1a;
+      border-top: 1px solid #333;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Coin Shop</h1>
+  </header>
+
+  <div class="container">
+    <div id="shop" class="items">
+      <p style="text-align: center;">Memuat data item...</p>
+    </div>
+    <p id="message"></p>
+    <a href="dashboard.html" class="back">← Kembali ke Dashboard</a>
+  </div>
+
+  <footer>
+    &copy; 2025 Western Roleplay
+  </footer>
+
+  <script>
+    const username = sessionStorage.getItem("username");
+    const shop = document.getElementById("shop");
+    const message = document.getElementById("message");
+
+    if (!username) {
+      window.location.href = "login.html";
+    }
+
+    async function loadShopItems() {
+      const res = await fetch("https://69f3-101-128-105-191.ngrok-free.app/api/shop-items");
+      const items = await res.json();
+      shop.innerHTML = "";
+
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <h3>${item.Name}</h3>
+          <p>${item.Description}</p>
+          <p>Harga: ${item.Price} WP Coin</p>
+          <button onclick="buyItem(${item.ID}, '${item.Name}', ${item.Price})">Beli Sekarang</button>
+        `;
+        shop.appendChild(div);
+      });
+    }
+
+    async function buyItem(id, name, price) {
+      const confirmBuy = confirm(`Yakin ingin membeli ${name} seharga ${price} WP Coin?`);
+      if (!confirmBuy) return;
+
+      const res = await fetch("https://69f3-101-128-105-191.ngrok-free.app/api/buy-item", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, itemId: id })
+      });
+
+      const result = await res.json();
+      message.textContent = result.message;
+      message.style.color = result.success ? "lightgreen" : "#f66";
+
+      if (result.success) {
+        setTimeout(() => {
+          message.textContent = "";
+          loadShopItems();
+        }, 1500);
+      }
+    }
+
+    loadShopItems();
+  </script>
+</body>
+</html>
